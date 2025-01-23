@@ -54,7 +54,7 @@ s_lvl_2 = [i for i in range(1, qntd_atencao_lvl_2)]
 
 distancia_demanda_lvl_1 = Dict((i,j) => distancia_demanda_pcf_1_aux[i][j] for i in s_ponto_demanda for j in s_lvl_1)
 distancia_lvl_1_lvl_2 = Dict((i,j) => distancia_pcf_1_pdf_2_aux[i][j] for i in s_lvl_1 for j in s_lvl_2)
-demanda = Dict(i => demanda[i] for i in s_ponto_demanda)
+demanda = Dict(i => demanda_origem_aux[i] for i in s_ponto_demanda)
 capacidade_lvl_1 = Dict(i => capacidade_lvl_1_aux[i] for i in s_lvl_1)
 capacidade_lvl_2 = Dict(i => capacidade_lvl_2_aux[i] for i in s_lvl_2)
 pacientes_encaminhados = Dict(i => pacientes_encaminhados_aux[i] for i in s_lvl_1)
@@ -90,7 +90,6 @@ pacientes_lvl_1_lvl_2 = @variable(model, fluxo_lvl_1_lvl_2[i ∈ s_lvl_1, j ∈ 
 #Restrições!!
 #Toda a demanda precisa ser atendida nos pontos lvl 1
 @constraint(model, [i ∈ s_ponto_demanda], sum(fluxo_demanda_lvl_1[i, j] for j in s_lvl_1) == demanda[i])
-
 
 #Toda a demanda que sai do lvl 1 precisa ser atendida no lvl 2
 @constraint(model, [k ∈ s_lvl_1], sum(fluxo_lvl_1_lvl_2[k, j] for j in s_lvl_2) == pacientes_encaminhados[k] * sum(fluxo_demanda_lvl_1[i,k] for i in s_ponto_demanda))
